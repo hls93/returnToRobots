@@ -27,6 +27,16 @@ routes.get('/working', (req, res) => {
   })
 })
 
+routes.get('/:user', function(req, res){
+  let coll = db.get().collection('userDirectory');
+  let person = req.params.user;
+
+  coll.find({username: person}).toArray((err, userDirectory) => {
+    res.render('user', {users: userDirectory})
+  })
+});
+
+
 
 
 module.exports = routes;
