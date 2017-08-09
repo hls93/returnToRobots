@@ -1,4 +1,3 @@
-
 //===========================================
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -9,9 +8,59 @@ const Schema = mongoose.Schema;
 
 // create a schema for a user
 const userSchema = new Schema({
-  name: { type: String, required: true },
-  password: { type: String },
-  passwordHash: { type: String }
+  id: {
+    type: String
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  avatar: {
+    type: String
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  university: {
+    type: String
+  },
+  job: {
+    type: String
+  },
+  company: {
+    type: String
+  },
+  skills: [{
+    type: String
+  }],
+  phone: {
+    type: Number
+  },
+  address: {
+    street_num: {
+      type: Number
+    },
+    street_name: {
+      type: String
+    },
+    city: {
+      type: String
+    },
+    state_or_province: {
+      type: String
+    },
+    postal_code: {
+      type: String
+    }
+  },
+  passwordHash: {
+    type: String
+  }
 });
 
 userSchema.plugin(findOrCreate);
@@ -26,17 +75,19 @@ userSchema.methods.validatePassword = function(password) {
 };
 
 // static method to authenticate a user
-userSchema.statics.authenticate = function(name, password) {
+userSchema.statics.authenticate = function(username, password) {
   return (
-    User.findOne({ name: name })
-      // validate the user's password
-      .then(user => {
-        if (user && user.validatePassword(password)) {
-          return user;
-        } else {
-          return null;
-        }
-      })
+    User.findOne({
+      username: username
+    })
+    // validate the user's password
+    .then(user => {
+      if (user && user.validatePassword(password)) {
+        return user;
+      } else {
+        return null;
+      }
+    })
   );
   //.then(user => console.log('matched user: ', user));
 };
