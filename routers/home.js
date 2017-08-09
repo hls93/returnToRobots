@@ -65,8 +65,17 @@ routes.get('/', (req, res) => {
 
 //login================================
 routes.get('/login', function(req, res){
-  res.render('login')
+  res.render('login', {failed: req.query.failed})
 })
+
+routes.post(
+  '/login',
+  passport.authenticate('local', {
+    succesRedirect: '/',
+    failureRedirect: '/login?failed=true',
+    failureFlash: true
+  })
+)
 
 //looking===============================
 routes.get('/looking', (req, res) => {
@@ -96,6 +105,24 @@ routes.get('/:user', function(req, res){
   })
 });
 
+
+//register====================
+routes.get('/signup', (req, res) => {
+  res.render('registrationForm');
+});
+
+routes.post('/signup', (req, res) => {
+  let user = new User(req.body);
+  user.provider = 'local';
+  user.setPassword(req.body.password);
+
+  user
+    .save()
+    // if good...
+    .then(() => res.redirect('/'))
+    // if bad...
+    .catch(err => console.log(err));
+})
 
 
 

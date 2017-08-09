@@ -42,7 +42,7 @@ app.use(bodyParser.urlencoded({
 app.use('/', homeRoutes);
 
 
-
+mongoose
 // connect to mongo via mongoose
   .connect('mongodb://localhost:27017/bcryptExample', { useMongoClient: true })
   // now we can do whatever we want with mongoose.
