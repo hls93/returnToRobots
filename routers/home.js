@@ -11,6 +11,10 @@ routes.get('/', (req, res) => {
   })
 })
 
+routes.get('/login', function(req, res){
+  res.render('login')
+})
+
 routes.get('/looking', (req, res) => {
   let coll = db.get().collection('userDirectory');
 
@@ -35,6 +39,8 @@ routes.get('/:user', function(req, res){
     res.render('user', {users: userDirectory})
   })
 });
+
+
 
 
 
