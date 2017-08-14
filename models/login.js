@@ -1,7 +1,7 @@
 //===========================================
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const findOrCreate = require('mongoose-findorcreate');
+const findOrCreate = require('mongoose-find-or-create');
 
 // get a reference to Schema
 const Schema = mongoose.Schema;
@@ -93,6 +93,6 @@ userSchema.statics.authenticate = function(username, password) {
 };
 
 // create a model for a User
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('data', userSchema);
 
 module.exports = User;

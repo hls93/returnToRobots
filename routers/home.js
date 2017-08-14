@@ -1,14 +1,27 @@
 //boiler plate================================
 const express = require('express');
 const routes = express.Router();
-const db = require('../db');
-const User = require('..models/login');
+// const db = require('../db');
+const User = require('../models/login');
 const flash = require('express-flash-messages');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+
+routes.use(
+  session({
+    secret: 'mouse',
+    resave: false,
+    saveUninitialized: true
+  })
+);
+
+
+routes.use(passport.initialize());
+routes.use(passport.session());
+routes.use(flash());
 
 routes.use(bodyParser.json());
 routes.use(bodyParser.urlencoded({extended: false}))
@@ -55,13 +68,15 @@ const requireLogin = (req, res, next) => {
 };
 
 //home==============================
-routes.get('/', (req, res) => {
-  let coll = db.get().collection('userDirectory');
+routes.get('/', requireLogin, (req, res) => {
+  User.find()
 
-  coll.find({}).toArray((err, userDirectory) => {
-    res.render('home', {users: userDirectory})
+  .then(data => res.render('home', { data: data, user: request.user}))
+
+  .catch(err => res.send('there was an error'))
+
   })
-})
+
 
 //login================================
 routes.get('/login', function(req, res){
@@ -78,37 +93,38 @@ routes.post(
 )
 
 //looking===============================
-routes.get('/looking', (req, res) => {
-  let coll = db.get().collection('userDirectory');
-
-  coll.find({job: null}).toArray((err, userDirectory) => {
-    res.render('looking', {users: userDirectory})
-  })
-})
+routes.post('/looking', (req, res) => {
+  User.find({ job: null })
+  .then(data => res.render('looking', {data: data}))
+  .catch(err => res.send('error'));
+});
 
 //working===================================
-routes.get('/working', (req, res) => {
-  let coll = db.get().collection('userDirectory');
+routes.post('/working', (req, res) => {
 
-  coll.find({job: {$nin: [null]}}).toArray((err, userDirectory) => {
-    res.render('working', {users: userDirectory})
-  })
+  User.find({ job: {$nin: [null] }})
+  .then(data => res.render('looking', {data: data}))
+  .catch(err => res.send('error'))
+
 })
 
 //individual=================================
-routes.get('/:user', function(req, res){
-  let coll = db.get().collection('userDirectory');
+routes.get('users/:user', function(req, res){
+  // let coll = db.get().collection('userDirectory');
   let person = req.params.user;
 
-  coll.find({username: person}).toArray((err, userDirectory) => {
-    res.render('user', {users: userDirectory})
-  })
+  User.find({username: username})
+  .then(data => res.render('login', {data: data}))
+  .catch(err => res.send('error'))
+  // coll.find({username: person}).toArray((err, userDirectory) => {
+  //   res.render('user', {users: userDirectory})
+  // })
 });
 
 
 //register====================
 routes.get('/signup', (req, res) => {
-  res.render('registrationForm');
+  res.render('signup');
 });
 
 routes.post('/signup', (req, res) => {

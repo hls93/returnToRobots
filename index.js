@@ -1,4 +1,4 @@
-const db = require('./db');
+// const db = require('./db');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const homeRoutes = require('./routers/home');
@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
-mogoose.Promise = bluebird;
+mongoose.Promise = bluebird;
 
 const Login = require('./models/login');
 
@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
 // this middleware function will check to see if we have a user in the session.
 // if not, we redirect to the login form.
 
-
+// app.get('/login')
 app.use('/', homeRoutes);
 
 
