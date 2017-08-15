@@ -8,9 +8,10 @@ const mongoose = require('mongoose');
 const bluebird = require('bluebird');
 mongoose.Promise = bluebird;
 
-const Login = require('./models/login');
-
 const app = express();
+
+
+
 
 app.use(express.static('public'));
 

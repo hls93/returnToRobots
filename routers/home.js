@@ -56,8 +56,7 @@ passport.deserializeUser((id, done) => {
   User.findById(id).then(user => done(null, user));
 });
 
-// this middleware function will check to see if we have a user in the session.
-// if not, we redirect to the login form.
+
 const requireLogin = (req, res, next) => {
   console.log('req.user', req.user);
   if (req.user) {
@@ -73,13 +72,13 @@ routes.get('/', requireLogin, (req, res) => {
 
   .then(data => res.render('home', { data: data, user: request.user}))
 
-  .catch(err => res.send('there was an error'))
+  .catch(err => res.send('nope'))
 
   })
 
 
 //login================================
-routes.get('/login', function(req, res){
+routes.get('/login', (req, res) => {
   res.render('login', {failed: req.query.failed})
 })
 
@@ -109,7 +108,7 @@ routes.post('/working', (req, res) => {
 })
 
 //individual=================================
-routes.get('users/:user', function(req, res){
+routes.get('/users/:user', function(req, res){
   // let coll = db.get().collection('userDirectory');
   let person = req.params.user;
 
